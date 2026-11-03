@@ -12,7 +12,36 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Compilación y Pruebas Unitarias') {
+            steps {
+                sh 'mvn clean test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
 
+        stage('Pruebas de Integración') {
+            steps {
+                sh 'mvn verify -DskipTests=false'
+            }
+        }
+
+        stage('Empaquetado (Build JAR)') {
+            steps {
+                sh 'mvn package -DskipTests'
+            }
+        }
+
+        stage('Construcción de Imagen Docker') {
+            steps {
+                script {
+                    sh 'docker build -t crud-personas:latest .'
+                }
+            }
+        }
     }
 
     post {
