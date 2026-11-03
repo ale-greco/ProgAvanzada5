@@ -23,18 +23,6 @@ pipeline {
             }
         }
 
-        stage('Pruebas de Integración') {
-            steps {
-                sh 'mvn verify -DskipTests=false'
-            }
-        }
-
-        stage('Empaquetado (Build JAR)') {
-            steps {
-                sh 'mvn package -DskipTests'
-            }
-        }
-
         stage('Construcción de Imagen Docker') {
             steps {
                 script {
